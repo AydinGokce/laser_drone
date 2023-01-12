@@ -22,7 +22,8 @@ class DroneCanvas(object):
         self.clear_button.grid(row=0, column=1)
         
         self.c = Canvas(self.root, bg='white', width=self.CANVAS_WIDTH, height=self.CANVAS_HEIGHT)
-        self.c.grid(row=1, columnspan=2)
+        self.c.grid(row=1, columnspan=2, sticky='nsew') 
+        
         self.setup()
         self.root.mainloop()
         
