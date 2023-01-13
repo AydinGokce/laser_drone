@@ -1,6 +1,6 @@
 from tkinter import Tk, Canvas, Button
 from tkinter.colorchooser import askcolor
-from utils import map_points_to_angles
+from utils import map_points_to_angles, write_angles_to_servo
 
 class DroneCanvas(object):
     DEFAULT_PEN_SIZE = 0.5
@@ -55,7 +55,7 @@ class DroneCanvas(object):
     def burn(self):
         print(f"strokes: {len(self.strokes)}")
         angles = map_points_to_angles(self.strokes, self.CANVAS_WIDTH, self.CANVAS_HEIGHT, self.PHYSICAL_WIDTH, self.PHYSICAL_HEIGHT, 100)
-        print(angles)
+        write_angles_to_servo(angles)
         
     def clear(self):
         self.c.delete('all')

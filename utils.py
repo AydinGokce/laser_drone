@@ -1,4 +1,7 @@
 import math
+from adafruit_servokit import ServoKit
+import time
+kit = ServoKit(channels=16)
 
 def map_points_to_angles(strokes, canvas_width, canvas_height, physical_width, physical_height, distance_to_wall):
     
@@ -25,5 +28,12 @@ def map_points_to_angles(strokes, canvas_width, canvas_height, physical_width, p
             angles.append((servo_angle_x, servo_angle_y))
 
     return angles
+            
+def write_angles_to_servo(angles, wait_duration=0.01):
+    for stroke in angles:
+        for (thx, thy) in stroke:
+            kit.servo[0].angle = thx
+            kit.servo[1].angle = thy
+            time.sleep(wait_duration)
             
             
