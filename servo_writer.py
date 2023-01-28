@@ -48,7 +48,20 @@ class ServoWriter:
     def reset_position(self):
         self.kit.servo[0].angle = 90
         self.kit.servo[1].angle = 90
-                
+    
+    def visualize_bounds(self, canvas_width, canvas_height, physical_width, physical_height, distance_to_wall):
+        pts = self.map_points_to_angles([
+            [
+              (0, 0),
+                (canvas_width, 0),
+                (canvas_width, canvas_height),
+                (0, canvas_height),
+                (0, 0)
+            ]
+        ], canvas_width, canvas_height, physical_width, physical_height, distance_to_wall)
+        
+        self.write_angles_to_servo(pts, point_interval=0.3)
+    
     def write_angles_to_servo(self, angles, point_interval=0.6):
         self.reset_position()
         

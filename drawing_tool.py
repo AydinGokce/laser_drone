@@ -5,14 +5,17 @@ import numpy as np
 class DroneCanvas(object):
     DEFAULT_PEN_SIZE = 0.5
     DEFAULT_COLOR = 'black'
-    CANVAS_WIDTH = 1000
-    CANVAS_HEIGHT = 300
-    PHYSICAL_WIDTH = 225 #mm
-    PHYSICAL_HEIGHT = 140 #mm
+    CANVAS_WIDTH = 900
+    CANVAS_HEIGHT = 800
+    PHYSICAL_WIDTH = 450 #mm
+    PHYSICAL_HEIGHT = 400 #mm
+    DISTANCE_TO_WALL = 210
     
     def __init__(self):
         self.root = Tk()
         self.writer = ServoWriter()
+        self.writer.reset_position()
+        
         
         self.strokes = []
         self.points = []
@@ -23,9 +26,11 @@ class DroneCanvas(object):
         self.clear_button.grid(row=0, column=1)
         self.toggle_mode_button = Button(self.root, text='toggle mode', command=self.toggle_mode)
         self.toggle_mode_button.grid(row=0, column=2)
+        self.visualize_bounds_button = Button(self.root, text='visualize bounds', command=lambda: self.writer.visualize_bounds(self.CANVAS_WIDTH, self.CANVAS_HEIGHT, self.PHYSICAL_WIDTH, self.PHYSICAL_HEIGHT, 300))
+        self.visualize_bounds_button.grid(row=0, column=3)
         
         self.c = Canvas(self.root, bg='white', width=self.CANVAS_WIDTH, height=self.CANVAS_HEIGHT)
-        self.c.grid(row=1, columnspan=3, sticky='nsew') 
+        self.c.grid(row=1, columnspan=4, sticky='nsew') 
         
         self.setup()
         self.root.mainloop()
@@ -91,8 +96,9 @@ class DroneCanvas(object):
     def burn(self):
         print(f"strokes: {len(self.strokes)}")
         
-        angles = self.writer.map_points_to_angles(self.strokes, self.CANVAS_WIDTH, self.CANVAS_HEIGHT, self.PHYSICAL_WIDTH, self.PHYSICAL_HEIGHT, 300)
+        angles = self.writer.map_points_to_angles(self.strokes, self.CANVAS_WIDTH, self.CANVAS_HEIGHT, self.PHYSICAL_WIDTH, self.PHYSICAL_HEIGHT, self.DISTANCE_TO_WALL)
         try:
+            self.writer.visualize_bounds(self.CANVAS_WIDTH, self.CANVAS_HEIGHT, self.PHYSICAL_WIDTH, self.PHYSICAL_HEIGHT, self.DISTANCE_TO_WALL)
             self.writer.write_angles_to_servo(angles)
         except Exception as e:
             self.writer.turn_laser_off()
